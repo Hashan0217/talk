@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>聊天机器人-用户登录</title>
+  <link rel="shortcut icon" href="./asset/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="./css/common.css" />
+  <link rel="stylesheet" href="./css/user.css" />
+</head>
+
+<body>
+  <form class="user-form">
+    <h1 class="title">
+      <img src="./asset/robot.png" alt="" />
+      聊天机器人
+    </h1>
+    <div class="form-group">
+      <i class="iconfont icon-zhanghao"></i>
+      <input id="txtLoginId" name="loginId" type="text" max="20" placeholder="请输入账号" class="txt" />
+      <p class="err"></p>
+    </div>
+    <div class="form-group">
+      <i class="iconfont icon-mima"></i>
+      <input id="txtLoginPwd" name="loginPwd" type="password" max="20" placeholder="请输入密码" class="txt" />
+      <p class="err"></p>
+    </div>
+    <div class="form-group">
+      <button class="submit" type="button">登录</button>
+    </div>
+    <div class="form-group">
+      <p class="msg">
+        没有账号？
+        <a href="./reg.html">点击这里注册</a>
+      </p>
+    </div>
+  </form>
+</body>
+<script src="./index.js"></script>
+<script>
+  const doms = {
+    id: document.querySelector('#txtLoginId'),
+    pwd: document.querySelector('#txtLoginPwd'),
+    btt: document.querySelector('.submit')
+  }
+
+  function init() {
+    doms.btt.addEventListener('click', function () {
+      const isOk = examine(doms);
+      if (isOk) {
+        getdata(doms).then(res => {
+          if (res.code === 0) {
+            window.location.href = 'index.html'
+          } else {
+            alert('账号或密码错误，请重新输入')
+          }
+        })
+      } else {
+        alert('请填入正确的账号与密码')
+      }
+    })
+  }
+
+  init()
+  function examine(doms) {
+    //检查表单是否合法
+
+    const isOk = doms.id.value.length <= 20 && doms.pwd.value.length <= 20;
+    const isOk1 = doms.id.value.length > 3 && doms.pwd.value.length > 3;
+    index = false;
+    if (isOk && isOk1) {
+      //检查密码是否一直
+      index = true;
+
+    }
+
+    return index;
+  }
+  async function getdata(doms) {
+    const body = {
+      loginId: doms.id.value,
+      loginPwd: doms.pwd.value
+    }
+    const res = await API.login(body)
+    return res;
+  }
+
+</script>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>聊天机器人-用户注册</title>
+  <link rel="shortcut icon" href="./asset/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="./css/common.css" />
+  <link rel="stylesheet" href="./css/user.css" />
+</head>
+
+<body>
+  <form class="user-form">
+    <h1 class="title">
+      <img src="./asset/robot.png" alt="" />
+      聊天机器人
+    </h1>
+    <div class="form-group">
+      <i class="iconfont icon-zhanghao"></i>
+      <input id="txtLoginId" name="loginId" type="text" max="20" placeholder="请输入账号" class="txt" />
+      <p class="err"></p>
+    </div>
+    <div class="form-group">
+      <i class="iconfont icon-zhanghao"></i>
+      <input id="txtNickname" name="nickname" type="text" max="20" placeholder="请输入昵称" class="txt" />
+      <p class="err"></p>
+    </div>
+    <div class="form-group">
+      <i class="iconfont icon-mima"></i>
+      <input id="txtLoginPwd" name="loginPwd" type="password" max="20" placeholder="请输入密码" class="txt" />
+      <p class="err"></p>
+    </div>
+    <div class="form-group">
+      <i class="iconfont icon-mima"></i>
+      <input type="password" id="txtLoginPwdConfirm" max="20" placeholder="请再输入一次密码" class="txt" />
+      <p class="err"></p>
+    </div>
+    <div class="form-group">
+      <button class="submit" type="button">注册</button>
+    </div>
+    <div class="form-group">
+      <p class="msg">
+        已有账号？
+        <a href="./login.html">点击这里登录</a>
+      </p>
+    </div>
+  </form>
+</body>
+<script src="./index.js"></script>
+<script>
+  const doms = {
+    regId: document.querySelector('#txtLoginId'),
+    regName: document.querySelector('#txtNickname'),
+    regPwd: document.querySelector("#txtLoginPwd"),
+    regPwdConfirm: document.querySelector("#txtLoginPwdConfirm"),
+    regBtt: document.querySelector('.submit')
+  }
+  function init() {
+    doms.regBtt.addEventListener('click', function () {
+      //检查表单是否合法
+      const isOk = examine(doms);
+      //ok则提交数据 
+      if (isOk) {
+        console.log(111);
+        getdata(doms).then(res => {
+          if (res.code === 0) {
+            alert('注册成功！')
+          } else {
+            alert('注册失败,请重新注册')
+          }
+
+        });
+      } else {
+        alert('您填入的数据有误，请重新输入')
+      }
+    })
+  }
+  init()
+
+  function examine(doms) {
+    //检查表单是否合法
+
+    const isOk = doms.regId.value.length <= 20 && doms.regName.value.length <= 20 && doms.regPwd.value.length <= 20;
+    const isOk1 = doms.regId.value.length > 3 && doms.regName.value.length > 3 && doms.regPwd.value.length > 3;
+    index = false;
+    if (isOk && isOk1) {
+      //检查密码是否一直
+      const traget = doms.regPwd.value === doms.regPwdConfirm.value;
+      if (traget) {
+        index = true;
+      }
+
+    }
+
+    return index;
+  }
+
+  async function getdata(doms) {
+    const body = {
+      loginId: doms.regId.value,
+      nickname: doms.regName.value,
+      loginPwd: doms.regPwd.value
+    }
+    const res = await API.reg(body)
+    return res;
+  }
+</script>
+
+</html>
